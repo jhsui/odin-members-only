@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up</title>
+</head>
+
+<body>
+  <h1>Sign Up</h1>
+
+  <form action="/sign-up" method="POST">
+    <!-- omit client-side validation -->
+    <label for="firstName">First Name</label>
+    <input id="firstName" name="firstName" placeholder="Your first name" type="text" />
+
+    <label for="lastName">Last Name</label>
+    <input id="lastName" name="lastName" placeholder="Your last name" type="text" />
+
+
+    <label for="username">Email (as username)</label>
+    <input id="username" name="username" placeholder="Email" type="email" />
+
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" />
+
+    <label for="confirmPassword">Confirm Password</label>
+    <input id="confirmPassword" name="confirmPassword" type="password" />
+
+    <!-- ??? -->
+    <label for="membership">Are you a member?</label>
+    <select name="membership" id="membership">
+      <option value="">--Please choose an option--</option>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+
+    <button type="submit">Sign Up</button>
+  </form>
+
+</body>
+
+</html>
