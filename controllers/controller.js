@@ -10,19 +10,12 @@ export async function signUpInsert(req, res) {
     throw Error("Two passwords are not the same!");
   }
 
-  let membership;
-  if (req.body.membership === "Yes") {
-    membership = true;
-  } else {
-    membership = false;
-  }
-
   await db.insertNewUser(
     req.body.firstName,
     req.body.lastName,
     req.body.username,
     req.body.password,
-    membership,
+    req.body.membership,
   );
 
   res.redirect("/");
