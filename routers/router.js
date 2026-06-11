@@ -6,7 +6,6 @@ import {
   loginPageGet,
   loginPost,
   loginSuccessPageGet,
-  loginFailurePageGet,
   postsGet,
 } from "../controllers/controller.js";
 
@@ -21,6 +20,5 @@ router.get("/login", loginPageGet);
 router.post("/login", loginPost);
 
 router.get("/login-success", loginSuccessPageGet);
-router.get("/login-failure", loginFailurePageGet);
 
 router.get("/posts", postsGet);

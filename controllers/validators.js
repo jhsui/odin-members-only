@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-const noEmpty = "can not be empty.";
+const noEmpty = "cannot be empty.";
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 30 characters.";
 
@@ -55,6 +55,7 @@ export const validateUserLogin = [
     .trim()
     .notEmpty()
     .withMessage(`Email ${noEmpty}`)
+    .bail()
     .isEmail()
     .withMessage("Email must be a valid email format."),
 

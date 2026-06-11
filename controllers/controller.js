@@ -58,7 +58,7 @@ export const loginPost = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).render("login-failure", {
+      return res.status(400).render("login", {
         errors: errors.array(),
       });
     }
@@ -67,7 +67,7 @@ export const loginPost = [
 
   passport.authenticate("local", {
     successRedirect: "/login-success",
-    failureRedirect: "/login-failure",
+    failureRedirect: "/login",
   }),
 ];
 
@@ -77,9 +77,9 @@ export function loginSuccessPageGet(req, res) {
   });
 }
 
-export function loginFailurePageGet(req, res) {
-  res.render("login-failure");
-}
+// export function loginFailurePageGet(req, res) {
+//   res.render("login-failure");
+// }
 
 export function postsGet(req, res) {
   res.render("posts");
