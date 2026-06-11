@@ -14,4 +14,21 @@ async function insertNewUser(
   );
 }
 
-export default { insertNewUser };
+async function findUsername(username) {
+  const { rows } = await pool.query(
+    "SELECT * FROM members WHERE username = $1",
+    [username],
+  );
+
+  return rows[0];
+}
+
+async function findUserID(id) {
+  const { rows } = await pool.query("SELECT * FROM members WHERE id = $1", [
+    id,
+  ]);
+
+  return rows[0];
+}
+
+export default { insertNewUser, findUsername, findUserID };
