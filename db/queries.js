@@ -31,4 +31,13 @@ async function findUserID(id) {
   return rows[0];
 }
 
-export default { insertNewUser, findUsername, findUserID };
+async function updateMembership(id) {
+  const result = await pool.query(
+    "UPDATE members SET membership = true WHERE id = $1;",
+    [id],
+  );
+
+  return result.rowCount === 1;
+}
+
+export default { insertNewUser, findUsername, findUserID, updateMembership };

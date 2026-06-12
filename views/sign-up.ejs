@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up</title>
+
+  <script src="/ui/uiController.js" defer></script>
 </head>
 
 <body>
@@ -13,7 +15,7 @@
   <%- include("partials/errors.ejs") %>
 
   <form action="/sign-up" method="POST">
-    <!-- omit client-side validation -->
+    <!-- omit client-side validation on purpose-->
     <label for="firstName">First Name</label>
     <input id="firstName" name="firstName" placeholder="Your first name" type="text" />
 
@@ -31,13 +33,21 @@
     <label for="confirmPassword">Confirm Password</label>
     <input id="confirmPassword" name="confirmPassword" type="password" />
 
-    <!-- ??? -->
-    <label for="membership">Are you a member?</label>
+
+    <!-- <label for="membership">Are you a member?</label>
     <select name="membership" id="membership">
       <option value="">--Please choose an option--</option>
       <option value="true">Yes</option>
       <option value="false">No</option>
     </select>
+
+    <div id="passcode-div" style="visibility: hidden;">
+      <form action="/passcode" method="POST">
+        <label for="passcode">Input your passcode:</label>
+        <input type="text" id="passcode" name="passcode" required>
+        <button type="submit">Submit</button>
+      </form>
+    </div> -->
 
     <button type="submit">Sign Up</button>
   </form>

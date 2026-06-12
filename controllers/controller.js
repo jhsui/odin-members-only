@@ -4,9 +4,9 @@ import {
   validateUserSignUp,
   validateUserLogin,
 } from "../controllers/validators.js";
-
 import { validationResult, matchedData } from "express-validator";
 import passport from "passport";
+import { error } from "node:console";
 
 export function homePageGet(req, res) {
   res.render("index");
@@ -77,10 +77,48 @@ export function loginSuccessPageGet(req, res) {
   });
 }
 
-// export function loginFailurePageGet(req, res) {
-//   res.render("login-failure");
-// }
-
 export function postsGet(req, res) {
   res.render("posts");
+}
+
+export function passcodePageGet(req, res) {
+  res.render("passcode");
+}
+
+// do we need to validate the input??
+export async function passcodeCheckPost(req, res) {
+  // check if in a session first
+  if (!req.isAuthenticated()) {
+    res.redirect(
+      "/login",
+      // ? how to deal with here
+      {
+        errorMsg: "Please log in first",
+      },
+    );
+  }
+
+  // then check passcode
+  if (req.body.passcode !== process.env.PASSCODE) {
+    return res.send(
+      // ??
+      "Passcode invalid.",
+    );
+  }
+
+  if (await db.updateMembership(req.user.id)) {
+    return res.send("You are a member now.");
+  } else {
+    return res.send("Server error, please contact support.");
+  }
+}
+
+export function logOutGet(req, res, next) {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+
+    res.redirect("/");
+  });
 }

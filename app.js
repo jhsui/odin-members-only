@@ -1,20 +1,17 @@
 import express, { urlencoded } from "express";
 import { join } from "node:path";
 import { router } from "./routers/router.js";
-
 import expressSession from "express-session";
-
 import pool from "./db/pool.js";
 import connectPgSimple from "connect-pg-simple";
-
 import passport from "passport";
 import "./config/passport.js";
 
 const pgSession = connectPgSimple(expressSession);
-
 const app = express();
 
 const __dirname = import.meta.dirname;
+// app.use(express.static("public"));
 app.set("views", join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(urlencoded({ extended: true }));

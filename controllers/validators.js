@@ -45,9 +45,10 @@ export const validateUserSignUp = [
     })
     .withMessage("Two passwords are not the same"),
 
-  body("membership")
-    .isIn(["true", "false"])
-    .withMessage("Please choose whether you are a member."),
+  // // how to deal with here?
+  // body("membership")
+  //   .isIn(["true", "false"])
+  //   .withMessage("Please choose whether you are a member."),
 ];
 
 export const validateUserLogin = [
