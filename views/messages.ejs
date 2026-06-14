@@ -8,17 +8,32 @@
 </head>
 
 <body>
-  <h1>This is the message page where to show messages.</h1>
+  <h1>Message page</h1>
 
   <a href="/create-new-message">Create a new message</a>
 
+  <% if(!user || !user.membership){ %>
+  <p>Because you are not logged in or you are not a member, so you cannot view the author of messages.</p>
+  <% } %>
 
-  <% if (locals.messages) {%>
+  <% if (locals.messages) { %>
+  <% if(user && user.membership){ %>
+
   <ul>
-    <% messages.forEach(function(message) { %>
+    <% messages.forEach(function(message){ %>
     <li><%= message.title %> <%= message.created_at %> <%= message.message %> <%= message.author %></li>
     <% }); %>
   </ul>
+
+  <% }else{ %>
+
+  <ul>
+    <% messages.forEach(function(message) { %>
+    <li><%= message.title %> <%= message.created_at %> <%= message.message %> </li>
+    <% }); %>
+  </ul>
+
+  <% } %>
   <% } %>
 </body>
 

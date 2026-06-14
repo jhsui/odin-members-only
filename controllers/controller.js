@@ -128,6 +128,7 @@ export async function messagesPageGet(req, res) {
   const messages = await db.getAllMessages();
 
   res.render("messages", {
+    user: req.user,
     messages,
   });
 }
