@@ -44,11 +44,6 @@ export const validateUserSignUp = [
       return value === req.body.password;
     })
     .withMessage("Two passwords are not the same"),
-
-  // // how to deal with here?
-  // body("membership")
-  //   .isIn(["true", "false"])
-  //   .withMessage("Please choose whether you are a member."),
 ];
 
 export const validateUserLogin = [

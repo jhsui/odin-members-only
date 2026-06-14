@@ -6,6 +6,7 @@ import pool from "./db/pool.js";
 import connectPgSimple from "connect-pg-simple";
 import passport from "passport";
 import "./config/passport.js";
+import flash from "connect-flash";
 
 const pgSession = connectPgSimple(expressSession);
 const app = express();
@@ -38,6 +39,8 @@ app.use((req, res, next) => {
   console.log("user:", req.user);
   next();
 });
+
+app.use(flash());
 
 app.use("/", router);
 

@@ -7,7 +7,6 @@ async function insertNewUser(
   password,
   membership,
 ) {
-  // we need to check if the two passwords are the same
   await pool.query(
     "INSERT INTO members (firstname, lastname, username, password, membership) VALUES ($1, $2, $3, $4, $5);",
     [firstname, lastname, username, password, membership],
@@ -40,4 +39,17 @@ async function updateMembership(id) {
   return result.rowCount === 1;
 }
 
-export default { insertNewUser, findUsername, findUserID, updateMembership };
+async function insertMessage(title, message, author) {
+  await pool.query(
+    "INSERT INTO messages (title, message, author) VALUES ($1, $2, $3);",
+    [title, message, author],
+  );
+}
+
+export default {
+  insertNewUser,
+  findUsername,
+  findUserID,
+  updateMembership,
+  insertMessage,
+};

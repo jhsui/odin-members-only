@@ -9,7 +9,11 @@ import passport from "passport";
 import { error } from "node:console";
 
 export function homePageGet(req, res) {
-  res.render("index");
+  res.render("index", {
+    user: req.user,
+    info: req.flash("info"),
+    errorMsg: req.flash("error"),
+  });
 }
 export function signUpPageGet(req, res) {
   res.render("sign-up");
@@ -20,8 +24,6 @@ export const signUpPost = [
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log("Sign up failed.");
-
       return res.status(400).render("sign-up", {
         errors: errors.array(),
       });
@@ -32,13 +34,12 @@ export const signUpPost = [
         matchedData(req);
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const membershipBoolean = membership === "true";
       await db.insertNewUser(
         firstName,
         lastName,
         username,
         hashedPassword,
-        membershipBoolean,
+        false,
       );
 
       res.redirect("/login");
@@ -50,7 +51,9 @@ export const signUpPost = [
 ];
 
 export function loginPageGet(req, res) {
-  res.render("login");
+  res.render("login", {
+    errorMsg: req.flash("error"),
+  });
 }
 
 export const loginPost = [
@@ -66,50 +69,48 @@ export const loginPost = [
   },
 
   passport.authenticate("local", {
-    successRedirect: "/login-success",
+    successRedirect: "/",
     failureRedirect: "/login",
+    failureFlash: true,
   }),
 ];
 
-export function loginSuccessPageGet(req, res) {
-  res.render("login-success", {
-    user: req.user,
+export function passcodePageGet(req, res) {
+  if (req.user === undefined) {
+    req.flash("error", "Please log in first.");
+    return res.redirect("/login");
+  }
+
+  if (req.user.membership) {
+    req.flash("error", "You already have membership.");
+    return res.redirect("/");
+  }
+
+  res.render("passcode", {
+    errorMsg: req.flash("error"),
   });
 }
 
-export function postsGet(req, res) {
-  res.render("posts");
-}
-
-export function passcodePageGet(req, res) {
-  res.render("passcode");
-}
-
-// do we need to validate the input??
+// Do we need to validate the input?
 export async function passcodeCheckPost(req, res) {
   // check if in a session first
   if (!req.isAuthenticated()) {
-    res.redirect(
-      "/login",
-      // ? how to deal with here
-      {
-        errorMsg: "Please log in first",
-      },
-    );
+    req.flash("error", "Please log in first.");
+    return res.redirect("/login");
   }
 
   // then check passcode
   if (req.body.passcode !== process.env.PASSCODE) {
-    return res.send(
-      // ??
-      "Passcode invalid.",
-    );
+    return res.render("passcode", { errorMsg: "Passcode invalid." });
   }
 
   if (await db.updateMembership(req.user.id)) {
-    return res.send("You are a member now.");
+    req.flash("info", "You are a member now.");
+    return res.redirect("/");
   } else {
-    return res.send("Server error, please contact support.");
+    return res.render("passcode", {
+      errorMsg: "Server error, please contact support.",
+    });
   }
 }
 
@@ -121,4 +122,30 @@ export function logOutGet(req, res, next) {
 
     res.redirect("/");
   });
+}
+
+export function messagesPageGet(req, res) {
+  res.render("messages");
+}
+
+export function createMessageGet(req, res) {
+  if (!req.isAuthenticated()) {
+    req.flash("error", "Please log in first.");
+    return res.redirect("login");
+  }
+
+  if (!req.user.membership) {
+    req.flash("error", "Please become a member first to post a message.");
+    return res.redirect("/passcode");
+  }
+
+  res.render("create-message", {
+    user: req.user,
+  });
+}
+
+export async function createMessagePost(req, res) {
+  await db.insertMessage(req.body.title, req.body.message, req.user.username);
+
+  res.redirect("/messages");
 }

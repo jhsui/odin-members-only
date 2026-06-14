@@ -9,6 +9,7 @@ passport.use(
     try {
       const user = await db.findUsername(username);
       if (!user) {
+        // how to use this message?
         return done(null, false, { message: "Incorrect username" });
       }
 

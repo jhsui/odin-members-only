@@ -5,11 +5,12 @@ import {
   signUpPost,
   loginPageGet,
   loginPost,
-  loginSuccessPageGet,
-  postsGet,
   passcodePageGet,
   passcodeCheckPost,
   logOutGet,
+  messagesPageGet,
+  createMessageGet,
+  createMessagePost,
 } from "../controllers/controller.js";
 
 export const router = Router();
@@ -22,11 +23,11 @@ router.post("/sign-up", signUpPost);
 router.get("/login", loginPageGet);
 router.post("/login", loginPost);
 
-router.get("/login-success", loginSuccessPageGet);
-
-router.get("/posts", postsGet);
-
 router.get("/passcode", passcodePageGet);
 router.post("/passcode", passcodeCheckPost);
 
 router.get("/log-out", logOutGet);
+
+router.get("/messages", messagesPageGet);
+router.get("/create-new-message", createMessageGet);
+router.post("/create-new-message", createMessagePost);

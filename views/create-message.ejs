@@ -9,14 +9,14 @@
 
 <body>
 
-  <%- include("partials/errorMsg.ejs") %>
+  <form action="/create-new-message" method="POST">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title">
 
-  <form action="/passcode" method="POST">
-    <label for="passcode">Input your passcode:</label>
-    <input type="text" id="passcode" name="passcode" required>
+    <label for="message">Message:</label>
+    <input type="text" id="message" name="message">
     <button type="submit">Submit</button>
   </form>
-  <a href="/">Home</a>
 </body>
 
 </html>
