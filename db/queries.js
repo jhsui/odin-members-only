@@ -46,10 +46,16 @@ async function insertMessage(title, message, author) {
   );
 }
 
+async function getAllMessages() {
+  const { rows } = await pool.query("SELECT * FROM messages;");
+
+  return rows;
+}
 export default {
   insertNewUser,
   findUsername,
   findUserID,
   updateMembership,
   insertMessage,
+  getAllMessages,
 };

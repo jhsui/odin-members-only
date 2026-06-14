@@ -124,8 +124,12 @@ export function logOutGet(req, res, next) {
   });
 }
 
-export function messagesPageGet(req, res) {
-  res.render("messages");
+export async function messagesPageGet(req, res) {
+  const messages = await db.getAllMessages();
+
+  res.render("messages", {
+    messages,
+  });
 }
 
 export function createMessageGet(req, res) {

@@ -12,7 +12,14 @@
 
   <a href="/create-new-message">Create a new message</a>
 
-  <!-- the following should be a message list -->
+
+  <% if (locals.messages) {%>
+  <ul>
+    <% messages.forEach(function(message) { %>
+    <li><%= message.title %> <%= message.created_at %> <%= message.message %> <%= message.author %></li>
+    <% }); %>
+  </ul>
+  <% } %>
 </body>
 
 </html>
