@@ -15,7 +15,7 @@ async function insertNewUser(
 
 async function findUsername(username) {
   const { rows } = await pool.query(
-    "SELECT * FROM members WHERE username = $1",
+    "SELECT * FROM members WHERE username = $1;",
     [username],
   );
 
@@ -51,6 +51,21 @@ async function getAllMessages() {
 
   return rows;
 }
+
+async function updateIsAdmin(id) {
+  const result = await pool.query(
+    "UPDATE members SET is_admin = true WHERE id = $1;",
+    [id],
+  );
+
+  return result.rowCount === 1;
+}
+
+async function deleteMessage(id) {
+  const result = await pool.query("DELETE FROM messages WHERE id = $1;", [id]);
+  return result.rowCount === 1;
+}
+
 export default {
   insertNewUser,
   findUsername,
@@ -58,4 +73,6 @@ export default {
   updateMembership,
   insertMessage,
   getAllMessages,
+  updateIsAdmin,
+  deleteMessage,
 };

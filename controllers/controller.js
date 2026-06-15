@@ -76,7 +76,7 @@ export const loginPost = [
 ];
 
 export function passcodePageGet(req, res) {
-  if (req.user === undefined) {
+  if (!req.isAuthenticated()) {
     req.flash("error", "Please log in first.");
     return res.redirect("/login");
   }
@@ -86,13 +86,11 @@ export function passcodePageGet(req, res) {
     return res.redirect("/");
   }
 
-  res.render("passcode", {
-    errorMsg: req.flash("error"),
-  });
+  res.render("passcode");
 }
 
 // Do we need to validate the input?
-export async function passcodeCheckPost(req, res) {
+export async function passcodePost(req, res) {
   // check if in a session first
   if (!req.isAuthenticated()) {
     req.flash("error", "Please log in first.");
@@ -100,8 +98,8 @@ export async function passcodeCheckPost(req, res) {
   }
 
   // then check passcode
-  if (req.body.passcode !== process.env.PASSCODE) {
-    return res.render("passcode", { errorMsg: "Passcode invalid." });
+  if (req.body.passcode?.trim() !== process.env.PASSCODE) {
+    return res.render("passcode", { errorMsg: "Invalid passcode." });
   }
 
   if (await db.updateMembership(req.user.id)) {
@@ -130,6 +128,7 @@ export async function messagesPageGet(req, res) {
   res.render("messages", {
     user: req.user,
     messages,
+    errorMsg: req.flash("error"),
   });
 }
 
@@ -153,4 +152,54 @@ export async function createMessagePost(req, res) {
   await db.insertMessage(req.body.title, req.body.message, req.user.username);
 
   res.redirect("/messages");
+}
+
+export function adminPageGet(req, res) {
+  if (!req.isAuthenticated()) {
+    req.flash("error", "Please log in first.");
+    return res.redirect("/login");
+  }
+
+  if (!req.user.membership) {
+    req.flash("error", "You need to become a member first.");
+    return res.redirect("/");
+  }
+
+  res.render("become-admin");
+}
+
+export async function adminPost(req, res) {
+  if (!req.isAuthenticated()) {
+    req.flash("error", "Please log in first.");
+    return res.redirect("/login");
+  }
+  // unnecessary?
+  if (!req.user.membership) {
+    req.flash("error", "You need to become a member first.");
+    return res.redirect("/");
+  }
+
+  if (req.body.admin?.trim() !== process.env.ADMIN_PASSCODE) {
+    return res.render("become-admin", {
+      errorMsg: "Invalid admin passcode.",
+    });
+  }
+
+  if (await db.updateIsAdmin(req.user.id)) {
+    req.flash("info", "You are an admin now.");
+    return res.redirect("/");
+  } else {
+    return res.render("become-admin", {
+      errorMsg: "Server error, please contact support.",
+    });
+  }
+}
+
+export async function deleteMessagePost(req, res) {
+  if (await db.deleteMessage(req.params.message_id)) {
+    return res.redirect("/messages");
+  } else {
+    req.flash("error", "Server error.");
+    res.redirect("/messages");
+  }
 }

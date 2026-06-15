@@ -11,14 +11,27 @@
   <h1>Message page</h1>
 
   <a href="/create-new-message">Create a new message</a>
+  <a href="/">Home</a>
+
+  <%- include("partials/errorMsg.ejs") %>
 
   <% if(!user || !user.membership){ %>
-  <p>Because you are not logged in or you are not a member, so you cannot view the author of messages.</p>
+  <p>Because you are not logged in or you are not a member, so you cannot view the author and date of messages.</p>
   <% } %>
 
   <% if (locals.messages) { %>
-  <% if(user && user.membership){ %>
 
+  <% if(user && user.membership && user.is_admin){ %>
+  <ul>
+    <% messages.forEach(function(message){ %>
+    <form action="/delete/<%= message.id %>" method="POST">
+      <li><%= message.title %> <%= message.created_at %> <%= message.message %> <%= message.author %></li>
+      <button type="submit">Delete</button>
+    </form>
+    <% }); %>
+  </ul>
+
+  <% }else if(user && user.membership){ %>
   <ul>
     <% messages.forEach(function(message){ %>
     <li><%= message.title %> <%= message.created_at %> <%= message.message %> <%= message.author %></li>
@@ -26,10 +39,9 @@
   </ul>
 
   <% }else{ %>
-
   <ul>
     <% messages.forEach(function(message) { %>
-    <li><%= message.title %> <%= message.created_at %> <%= message.message %> </li>
+    <li><%= message.title %> <%= message.message %> </li>
     <% }); %>
   </ul>
 
