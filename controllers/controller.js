@@ -86,7 +86,9 @@ export function passcodePageGet(req, res) {
     return res.redirect("/");
   }
 
-  res.render("passcode");
+  res.render("passcode", {
+    errorMsg: req.flash("error"),
+  });
 }
 
 // Do we need to validate the input?
